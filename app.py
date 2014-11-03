@@ -1,9 +1,20 @@
-import random, re
+##atm logout python stuff should be good, and we have something or other for login
 from pymongo import Connection
-from flask import Flask, render_template, request
+from flask import Flask,flash, render_template, request, session
+
+conn = Connection()
+db = conn["sunmar"]
 
 app = Flask(__name__)
-app.session_interface = MongoSessionInterface(db=***put name here***)#not 100% on this
+
+
+##Checks if you entered a valid usernameand password
+legitLogin(user,pword):
+   if (len(user) < 5 or len(user) > 15
+       or len(pword) < 7 or len(pword) > 20 ):
+          return True ##the t/f values are a bit weird here
+   else:
+      return False
 
 @app.route('/',methods=["POST","GET"])
 def home():
@@ -12,16 +23,34 @@ def home():
 def about():
     return render_template("about.html")
 
-@app.route("/login")
-def login():
-    returnrender_template("login.html")
+@app.route("/login", methods=['POST', 'GET'])
+   def login():
+   error = None
+   if "username" not in session:
+      if request.method == "POST":
+         user = request.form['user']
+         pword = request.form['pword']
+         error =  legitLogin(user,pword):
+         if error = True: 
+            flash("Invalid username or password")
+   return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():
+    session.pop('username',None)
+    ##Do you need to pop the password too??
     return render_template("logout.html")
 
-@app.route("/register")
+##stuck on how to add to db
+@app.route("/register", methods=['POST', 'GET'])
 def register():
+    if request.method == "POST":
+      user = request.form["user"]
+      pword = request.form["pword"]
+      if (legitLogin(user,pword)):
+
+           
     return render_template("register.html")
 
 @app.route("/shhh")
@@ -35,6 +64,7 @@ def page2():
 
 if __name__ == "__main__":
     app.debug = True
+    app.secret_key = "
     app.run()
  
         
