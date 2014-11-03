@@ -1,6 +1,7 @@
 ##atm logout python stuff should be good, and we have something or other for login
 from pymongo import Connection
-from flask import Flask,flash, render_template, request, session
+from flask import Flask,flash, render_template, request, redirect, session
+##Maria, you need to learn how to use redirect
 
 conn = Connection()
 db = conn["sunmar"]
@@ -8,7 +9,7 @@ db = conn["sunmar"]
 app = Flask(__name__)
 
 
-##Checks if you entered a valid usernameand password
+##Checks if you entered a valid username and password
 legitLogin(user,pword):
    if (len(user) < 5 or len(user) > 15
        or len(pword) < 7 or len(pword) > 20 ):
@@ -25,15 +26,15 @@ def about():
 
 @app.route("/login", methods=['POST', 'GET'])
    def login():
-   error = None
-   if "username" not in session:
-      if request.method == "POST":
-         user = request.form['user']
-         pword = request.form['pword']
-         error =  legitLogin(user,pword):
-         if error = True: 
-            flash("Invalid username or password")
-   return render_template("login.html")
+      error = None
+      if "username" not in session:
+         if request.method == "POST":
+            user = request.form['user']
+            pword = request.form['pword']
+            error =  legitLogin(user,pword):
+            if error = True: 
+                flash("Invalid username or password")
+                return render_template("login.html")
 
 
 @app.route("/logout")
@@ -64,7 +65,7 @@ def page2():
 
 if __name__ == "__main__":
     app.debug = True
-    app.secret_key = "
+    app.secret_key = "MTYIXatgAP2y6fIvq8MrAN8RKgHg2B8p"
     app.run()
- 
+    
         
