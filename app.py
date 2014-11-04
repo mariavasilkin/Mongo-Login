@@ -39,7 +39,7 @@ def login():
             user = request.form['user']
             pwrd = request.form['pwrd']
             if legitLogin(user,pwrd) == False: ##if there is an error
-                flash("Invalid username or password")
+                flask("Invalid username or password")
                 return render_template("login.html")
             else:
                session["user"]=user
