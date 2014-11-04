@@ -24,7 +24,7 @@ def inDatabse(username):
       return False
 @app.route('/',methods=["POST","GET"])
 def home():
-    pass
+    return render_template("about.html")
 
 @app.route("/about")
 def about():
