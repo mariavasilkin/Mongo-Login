@@ -15,6 +15,7 @@ def legitLogin(user,pword):
           return False
    else:
       return True
+
 ##This one isn't super neat and can use some work
 def inDatabse(username):
    numCursors = db.sunmar.find({user:username})
@@ -22,9 +23,10 @@ def inDatabse(username):
       return True
    else:
       return False
-@app.route('/',methods=["POST","GET"])
+
+@app.route("/")
 def home():
-    return render_template("about.html")
+   render_template("about.html")
 
 @app.route("/about")
 def about():
@@ -89,7 +91,7 @@ def page1():
 
 @app.route("/shhh2")
 def page2():
-   if "useR" not in session:
+   if "user" not in session:
       redirect("/about")
    else:
       return render_template("secret2.html")
