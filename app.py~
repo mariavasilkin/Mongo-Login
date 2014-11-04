@@ -1,6 +1,6 @@
 from pymongo import Connection
 from flask import Flask,flash, render_template, request, redirect, session
-
+##Maria, you need to learn how to use redirect
 
 conn = Connection()
 db = conn["sunmar"]
@@ -61,15 +61,12 @@ def logout():
 def register():
    if "user" in session:
       flash("You're already logged in! If you want to register another account, logout first")
-      redirect("/about")
    else:
       if request.method == "GET":
          return render_template("register.html")
       else:
          user = request.form["user"]
          pword = request.form["pword"]
-         nmae = request.form["name"]
-
          if (not(legitLogin(user,pword))):
             flash("Invalid username or password")
             redirect("/register")   
@@ -77,22 +74,16 @@ def register():
             flash("That username is already taken, try another one")
             redirect("/register")
          else:
-            db.user.insert({"user":user, "pwrd":pwrd, "name":name})
-            redirect("/login")           
+            session["user"] = user
+
 
 @app.route("/shhh")
 def page1():
-   if "user" not in session:
-      redirect("/about")
-   else:
-      return render_template("secret1.html")
+    return render_template("secret1.html")
 
 @app.route("/shhh2")
 def page2():
-   if "useR" not in session:
-      redirect("/about")
-   else:
-      return render_template("secret2.html")
+    return render_template("secret2.html")
 
 
 if __name__ == "__main__":
