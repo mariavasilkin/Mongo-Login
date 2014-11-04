@@ -32,7 +32,7 @@ def about():
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
-    if "user" not in session:
+   if "user" not in session:
         if request.method == "GET":
            return render_template("login.html")
         else:
