@@ -17,7 +17,7 @@ def legitLogin(user,pword):
       return True
 
 ##This one isn't super neat and can use some work
-def inDatabse(username):
+def inDatabase(username):
    numCursors = db.sunmar.find({user:username})
    if (numCursors > 0):
       return True
@@ -70,7 +70,7 @@ def register():
       else:
          user = request.form["user"]
          pword = request.form["pword"]
-         nmae = request.form["name"]
+         name = request.form["name"]
 
          if (not(legitLogin(user,pword))):
             flash("Invalid username or password")
