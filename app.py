@@ -74,7 +74,8 @@ def register():
             flash("That username is already taken, try another one")
             redirect("/register")
          else:
-            session[
+            session["user"] = user
+
 
 @app.route("/shhh")
 def page1():
