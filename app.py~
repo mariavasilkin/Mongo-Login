@@ -26,7 +26,7 @@ def inDatabase(username):
 
 @app.route("/")
 def home():
-   return render_template("about.html")
+   render_template("about.html")
 
 @app.route("/about")
 def about():
@@ -38,8 +38,8 @@ def login():
         if request.method == "GET":
            return render_template("login.html")
         else:
-            user = request.form['username']
-            pwrd = request.form['password']
+            user = request.form['user']
+            pwrd = request.form['pwrd']
             if legitLogin(user,pwrd) == False: ##if there is an error
                 flash("Invalid username or password")
                 return render_template("login.html")
@@ -69,10 +69,10 @@ def register():
          return render_template("register.html")
       else:
          user = request.form["user"]
-         pwrd = request.form["pwrd"]
-         ##name = request.form["name"]
+         pword = request.form["pword"]
+         name = request.form["name"]
 
-         if (not(legitLogin(user,pwrd))):
+         if (not(legitLogin(user,pword))):
             flash("Invalid username or password")
             redirect("/register")   
          elif (inDatabase(user)):
