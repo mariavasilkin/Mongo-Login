@@ -1,5 +1,10 @@
 Mongo-Login
 ===========
+Maria and Sunnam's Project!
+Notes:
+	- We worked together from Maria's account in class a lot, so a lot of the earlier commits are from her account
+
+Assignment:
 
 You'll work with one partner (your choice) - put the stuff under submissions and make sure the folder name and or README specifies who the group is comprised of.
 

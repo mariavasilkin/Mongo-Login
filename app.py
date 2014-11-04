@@ -1,4 +1,3 @@
-##atm logout python stuff should be good, and we have something or other for login
 from pymongo import Connection
 from flask import Flask,flash, render_template, request, redirect, session
 ##Maria, you need to learn how to use redirect
@@ -13,10 +12,16 @@ app = Flask(__name__)
 def legitLogin(user,pword):
    if (len(user) < 5 or len(user) > 15
        or len(pword) < 7 or len(pword) > 20 ):
-          return True ##the t/f values are a bit weird here
+          return False
+   else:
+      return True
+##This one isn't super neat and can use some work
+def inDatabse(username):
+   numCursors = db.sunmar.find({user:username})
+   if (numCursors > 0):
+      return True
    else:
       return False
-
 @app.route('/',methods=["POST","GET"])
 def home():
     pass
@@ -27,15 +32,22 @@ def about():
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
-    error = None
-    if "username" not in session:
-        if request.method == "POST":
+    if "user" not in session:
+        if request.method == "GET":
+           return render_template("login.html")
+        else:
             user = request.form['user']
-            pword = request.form['pword']
-            error =  legitLogin(user,pword)
-            if error == True: 
+            pwrd = request.form['pwrd']
+            if legitLogin(user,pwrd) == False: ##if there is an error
                 flash("Invalid username or password")
                 return render_template("login.html")
+            else:
+               session["user"]=user
+               ##if they hit login from another page, it should rediect them back to that page somehow
+               return redirect("/about")
+   ##if they're already logged in
+   else:
+      return redirect("/about") ##we can change what it redirects to
 
 
 @app.route("/logout")
@@ -47,11 +59,22 @@ def logout():
 ##stuck on how to add to db
 @app.route("/register", methods=['POST', 'GET'])
 def register():
-    if request.method == "POST":
-      user = request.form["user"]
-      pword = request.form["pword"]
-    if (legitLogin(user,pword)):
-        return render_template("register.html")
+   if "user" in session:
+      flash("You're already logged in! If you want to register another account, logout first")
+   else:
+      if request.method == "GET":
+         return render_template("register.html")
+      else:
+         user = request.form["user"]
+         pword = request.form["pword"]
+         if (not(legitLogin(user,pword))):
+            flash("Invalid username or password")
+            redirect("/register")   
+         elif (inDatabase(user)):
+            flash("That username is already taken, try another one")
+            redirect("/register")
+         else:
+            session[
 
 @app.route("/shhh")
 def page1():
