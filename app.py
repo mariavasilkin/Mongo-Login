@@ -1,39 +1,25 @@
-from pymongo import Connection
 from flask import Flask,flash, render_template, request, redirect, session
-
-
-conn = Connection()
-db = conn["sunmar"]
+import db
 
 app = Flask(__name__)
+app.secret_key = "MTYIXatgAP2y6fIvq8MrAN8RKgHg2B8p"
 
-
-##Checks if you entered a valid username and password
-def legitLogin(user,pword):
-   if (len(user) < 5 or len(user) > 15
-       or len(pword) < 7 or len(pword) > 20 ):
-          return False
-   else:
-      return True
-
-##This one isn't super neat and can use some work
-def inDatabase(username):
-   numCursors = db.sunmar.find({user:username})
-   if (numCursors > 0):
-      return True
-   else:
-      return False
 
 @app.route("/")
 def home():
+<<<<<<< Updated upstream
    return render_template("about.html")
+=======
+   return render_template("register.html")
+>>>>>>> Stashed changes
 
 @app.route("/about")
 def about():
     return render_template("about.html")
 
-@app.route("/login", methods=['POST', 'GET'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
+<<<<<<< Updated upstream
    if "user" not in session:
         if request.method == "GET":
            return render_template("login.html")
@@ -48,26 +34,50 @@ def login():
                ##if they hit login from another page, it should rediect them back to that page somehow
                return redirect("/about")
    ##if they're already logged in
+=======
+   if "user" in session:
+        flash("Please logout before you try to log into another account")
+        return render_template('home.html')
+   if request.method=="GET":
+        return render_template("login.html")
+>>>>>>> Stashed changes
    else:
-      return redirect("/about") ##we can change what it redirects to
-
+        user = request.form['user']
+        pwrd = request.form['pwrd']
+        if db.legitLogin(user,pwrd):
+            session['user']=user
+            if 'return_to' in session:
+                s = session['return_to']
+                session.pop('return_to',None)
+                return redirect(s)
+            else: return redirect('/home')
+        else:
+            flash('Please enter a valid username and password')
+            return render_template('login.html')
 
 @app.route("/logout")
 def logout():
-    session.pop('username',None)
-    ##Do you need to pop the password too??
-    return render_template("logout.html")
+    session.pop('user',None)
+    return redirect('/login')
 
-##stuck on how to add to db
-@app.route("/register", methods=['POST', 'GET'])
+@app.route("/register", methods=['GET', 'POST'])
 def register():
    if "user" in session:
-      flash("You're already logged in! If you want to register another account, logout first")
-      redirect("/about")
+      flash("You're already logged in! If you want to register for another account, please logout first")
+      return render_template('home.html')
+   if request.method=='GET':
+        return render_template("register.html")
    else:
-      if request.method == "GET":
-         return render_template("register.html")
+      user = request.form["user"]
+      pwrd = request.form["pwrd"]
+      if (not(db.legitLogin(user,pwrd))):
+        flash("Invalid username or password")
+        redirect("/register")   
+      elif (db.existingUser(user)==False):
+        flash("That username is already taken, try another one")
+        redirect("/register")
       else:
+<<<<<<< Updated upstream
          user = request.form["user"]
          pwrd = request.form["pwrd"]
          ##name = request.form["name"]
@@ -81,6 +91,13 @@ def register():
          else:
             db.user.insert({"user":user, "pwrd":pwrd, "name":name})
             redirect("/login")           
+=======
+        if db.registerUser(user,pwrd):
+          flash("You have succesfully created a new account! Please log in to continue")
+          return redirect('/login')
+        else:
+          return redirect('/home')
+>>>>>>> Stashed changes
 
 @app.route("/shhh")
 def page1():
@@ -92,14 +109,12 @@ def page1():
 @app.route("/shhh2")
 def page2():
    if "user" not in session:
-      redirect("/about")
+      redirect("/register")
    else:
       return render_template("secret2.html")
 
-
 if __name__ == "__main__":
     app.debug = True
-    app.secret_key = "MTYIXatgAP2y6fIvq8MrAN8RKgHg2B8p"
     app.run()
     
         
