@@ -14,7 +14,7 @@ def existingUser(user):
         return False
 
 ##Adds new user to db
-def registerUser(user,pwrd):
+def registerUser(name,pwrd):
     if ((db.users.find_one({'user':user}))==None) and pwrd!=None:
         db.users.insert({user:'user',pwrd:'password'})
         return True
@@ -23,9 +23,9 @@ def registerUser(user,pwrd):
 print db.collection_names()
 
 ##Checks if you entered a valid username and password
-def legitLogin(user,pwrd):
+def legitLogin(user,pword):
    if ((len(user) < 5) or (len(user) > 15)
-       or (len(pwrd) < 7) or (len(pwrd) > 20)):
+       or (len(pword) < 7) or (len(pword) > 20)):
           return False
    else:
       return True
