@@ -7,7 +7,16 @@ app.secret_key = "MTYIXatgAP2y6fIvq8MrAN8RKgHg2B8p"
 #HOME:
 @app.route("/")
 def home():
-   return redirect("/about")
+   if request.method == "GET":
+      if "user" in session:
+         return render_template("home.html", status="Log out")
+      else:
+         return render_template("home.html", status="Log in")
+   else:
+      if "user" not in session:
+         return redirect("/login")
+      else:
+         return redirect("/logout")
 
 #ABOUT:
 @app.route("/about", methods=['GET', 'POST'])
@@ -27,7 +36,7 @@ def login():
         else:
             user = request.form['username']
             pwrd = request.form['password']
-            if legitLogin(user,pwrd) == False: ##if there is an error
+            if (db.legitLogin(user,pwrd) == False): ##if there is an error
                 flash("Invalid username or password")
                 return render_template("login.html")
             else:
@@ -45,7 +54,7 @@ def login():
    else:
         user = request.form['user']
         pwrd = request.form['pwrd']
-        if db.legitLogin(user,pwrd):
+        if (db.legitLogin(user,pwrd)):
             session['user']=user
             if 'return_to' in session:
                 s = session['return_to']
@@ -88,10 +97,10 @@ def register():
          pwrd = request.form["pwrd"]
          ##name = request.form["name"]
 
-         if (not(legitLogin(user,pwrd))):
+         if (not(db.legitLogin(user,pwrd))):
             flash("Invalid username or password")
             redirect("/register")   
-         elif (existingUser(user)):
+         elif (db.existingUser(user)):
             flash("That username is already taken, try another one")
             redirect("/register")
          else:
@@ -108,7 +117,7 @@ def register():
 @app.route("/shhh")
 def page1():
    if "user" not in session:
-      redirect("/about")
+      redirect("/login")
    else:
       return render_template("secret1.html")
 
@@ -116,7 +125,7 @@ def page1():
 @app.route("/shhh2")
 def page2():
    if "user" not in session:
-      redirect("/register")
+      redirect("/login")
    else:
       return render_template("secret2.html")
 

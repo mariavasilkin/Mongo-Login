@@ -1,8 +1,14 @@
 Mongo-Login
 ===========
 Maria and Sunnam's Project!
+
 Notes:
+
 	- We worked together from Maria's account in class a lot, so a lot of the earlier commits are from her account
+
+	- Flash isn't working from the HTML side yet
+
+	
 
 Assignment:
 
