@@ -1,22 +1,23 @@
-from flask import Flask,flash, render_template, request, redirect, session
+from flask import Flask, flash, render_template, request, redirect, session
 import db
 
 app = Flask(__name__)
 app.secret_key = "MTYIXatgAP2y6fIvq8MrAN8RKgHg2B8p"
 
-
+#HOME:
 @app.route("/")
 def home():
+   return redirect("/about")
 
-   return render_template("about.html")
-
-   return render_template("register.html")
-
-
-@app.route("/about")
+#ABOUT:
+@app.route("/about", methods=['GET', 'POST'])
 def about():
-    return render_template("about.html")
+   if request.method == "GET":
+      return render_template("about.html")
+   else:
+      return redirect("/login")
 
+#LOGIN:
 @app.route("/login", methods=['GET', 'POST'])
 def login():
 
@@ -55,11 +56,16 @@ def login():
             flash('Please enter a valid username and password')
             return render_template('login.html')
 
-@app.route("/logout")
+#LOGOUT:
+@app.route("/logout", methods=['GET', 'POST'])
 def logout():
-    session.pop('user',None)
-    return redirect('/login')
+   if request.method == "GET":
+      session.pop('user',None)
+      render_template('logout.html')
+   else:
+      return redirect('/login')
 
+#REGISTER:
 @app.route("/register", methods=['GET', 'POST'])
 def register():
    if "user" in session:
@@ -72,10 +78,10 @@ def register():
       pwrd = request.form["pwrd"]
       if (not(db.legitLogin(user,pwrd))):
         flash("Invalid username or password")
-        redirect("/register")   
+        redirect("/login")   
       elif (db.existingUser(user)==False):
         flash("That username is already taken, try another one")
-        redirect("/register")
+        redirect("/login")
       else:
 
          user = request.form["user"]
@@ -98,7 +104,7 @@ def register():
             #else:
             #return redirect('/home')
 
-
+#SECRET PAGE 1:
 @app.route("/shhh")
 def page1():
    if "user" not in session:
@@ -106,6 +112,7 @@ def page1():
    else:
       return render_template("secret1.html")
 
+#SECRET PAGE 2:
 @app.route("/shhh2")
 def page2():
    if "user" not in session:

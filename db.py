@@ -20,12 +20,12 @@ def registerUser(user,pwrd):
         return True
     else:
         return False
-print db.collection_names()
+#print db.collection_names()
 
 ##Checks if you entered a valid username and password
 def legitLogin(user,pwrd):
-   if ((len(user) < 5) or (len(user) > 15)
-       or (len(pwrd) < 7) or (len(pwrd) > 20)):
+   if ((len(user) < 4) or (len(user) > 15)
+       or (len(pwrd) < 5) or (len(pwrd) > 20)):
           return False
    else:
       return True
